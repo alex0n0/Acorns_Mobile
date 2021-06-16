@@ -13,7 +13,7 @@ const App = () => {
     //   <BottomTabsNavigation></BottomTabsNavigation>
     // </NavigationContainer>
     <View>
-      <Text>hello world</Text>
+      <Text>hello worlddddd</Text>
     </View>
   );
 };

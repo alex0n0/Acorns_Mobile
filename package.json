@@ -8,7 +8,7 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "build": "rm -rf dist/ && webpack --mode=production --config webpack.config.js",
+    "build": "webpack --mode=production --config webpack.config.js",
     "web": "webpack serve --mode=development --config webpack.config.js"
   },
   "dependencies": {

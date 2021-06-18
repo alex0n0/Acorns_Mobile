@@ -1,20 +1,30 @@
-// dependencies
-// import 'react-native-gesture-handler';
+import 'react-native-gesture-handler';
 import React from 'react';
-// import {NavigationContainer} from '@react-navigation/native';
-// components
-// import BottomTabsNavigation from './src/navigation/BottomTabsNavigation';
+import {LogBox } from 'react-native';
+LogBox.ignoreLogs(['Reanimated 2']);
+import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+// internal
+import Home_BottomTabsNavigation from './src/navigation/Home_BottomTabsNavigation';
+import { globalColors } from './src/styles/GlobalStyles';
 
-import {View, Text} from 'react-native';
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: globalColors.primary,
+    background: globalColors.background,
+    text: globalColors.text
+  },
+};
 
 const App = () => {
   return (
-    // <NavigationContainer>
-    //   <BottomTabsNavigation></BottomTabsNavigation>
-    // </NavigationContainer>
-    <View>
-      <Text>hello worlddddd</Text>
-    </View>
+    <SafeAreaProvider>
+      <NavigationContainer theme={MyTheme}>
+        <Home_BottomTabsNavigation></Home_BottomTabsNavigation>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 };
 

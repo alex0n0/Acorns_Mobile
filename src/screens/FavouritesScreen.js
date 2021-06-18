@@ -1,37 +1,72 @@
-import React from 'react';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import React, {useState, useEffect} from 'react';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   View,
   Text,
+  TouchableOpacity,
+  Dimensions,
+  RefreshControl,
 } from 'react-native';
-import Svg, {Circle} from 'react-native-svg';
-function FavouritesScreen() {
+// internal
+import Card from '../components/Card';
+import {globalColors, globalStyles} from '../styles/GlobalStyles';
+import {getCards} from '../api/httpService';
+
+const windowWidth = Dimensions.get('window').width;
+
+function FavouritesScreen({navigation}) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [cards, setCards] = useState([]);
+
+  useEffect(() => {
+    getCards()
+      .then(res => {
+        setCards(res);
+      })
+      .catch(err => {
+        // console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (isLoading) {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+    }
+  }, [isLoading]);
+
+  const handleReload = () => {
+    setIsLoading(true);
+  };
+
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={{backgroundColor: 'red'}}>
-        <StatusBar barStyle={'dark-content'} />
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic">
-          <View style={{height: 300}}>
-            <Text>asdf</Text>
-            <Svg height="50%" width="50%" viewBox="0 0 100 100">
-              <Circle
-                cx="50"
-                cy="50"
-                r="45"
-                stroke="blue"
-                strokeWidth="2.5"
-                fill="green"
-              />
-            </Svg>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <SafeAreaView style={[globalStyles.flex1]}>
+      <StatusBar backgroundColor="black" barStyle="light-content" />
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={handleReload} />
+        }
+        contentInsetAdjustmentBehavior="automatic">
+        <Text style={[globalStyles.textCenter, globalStyles.mb50]}>
+          Favourites
+        </Text>
+        {cards.map((card, i) => (
+          <Card
+            key={card.Id}
+            card={card}
+            windowWidth={windowWidth}
+            styles={[globalStyles.mb50]}
+            onPressNavigation={() => {
+              navigation.navigate('FavouritesStackBarcodeTopTabs');
+            }}></Card>
+        ))}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({});

@@ -8,7 +8,24 @@ const {presets} = require(`${appDirectory}/babel.config.js`);
 
 const compileNodeModules = [
   // Add every react-native package that needs compiling
-  // 'react-native-gesture-handler',
+  // '@react-native-community/art',
+  '@react-native-community/masked-view',
+  '@react-navigation/bottom-tabs',
+  // '@react-navigation/material-top-tabs',
+  '@react-navigation/native',
+  '@react-navigation/stack',
+  'react-native-barcode-builder',
+  'react-native-elements',
+  'react-native-gesture-handler',
+  // 'react-native-qrcode-svg',
+  'react-native-reanimated',
+  'react-native-safe-area-context',
+  'react-native-screens',
+  // 'react-native-svg',
+  'react-native-vector-icons',
+  // 'react-native-tab-view',
+  'react-native-ratings',
+  'react-native-status-bar-height'
 ].map((moduleName) => path.resolve(appDirectory, `node_modules/${moduleName}`));
 
 const babelLoaderConfiguration = {

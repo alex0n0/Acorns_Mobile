@@ -13,7 +13,7 @@ import Header from '../components/Header';
 import Card from '../components/Card';
 import {globalColors, globalStyles} from '../styles/GlobalStyles';
 import {getCards} from '../api/httpService';
-function ProfileScreen() {
+function RewardDetailsScreen() {
   return (
     <SafeAreaView style={[globalStyles.flex1]}>
       <StatusBar backgroundColor="black" barStyle="light-content" />
@@ -31,7 +31,7 @@ function ProfileScreen() {
               fill="green"
             />
           </Svg>
-          <Text>Profile Screen</Text>
+          <Text>Reward Details Screen</Text>
           <Text>asdf</Text>
           <Text>asdf</Text>
           <Text>asdf</Text>
@@ -45,5 +45,4 @@ function ProfileScreen() {
   );
 }
 const styles = StyleSheet.create({});
-
-export default ProfileScreen;
+export default RewardDetailsScreen;

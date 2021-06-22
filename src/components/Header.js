@@ -13,7 +13,7 @@ import logo from '../assets/images/Acorns.png';
 
 const windowWidth = Dimensions.get('window').width;
 
-function Header() {
+function Header({showBack}) {
   return (
     <View
       style={[
@@ -23,18 +23,19 @@ function Header() {
         styles.header,
       ]}>
       <TouchableOpacity
-        onPress={() => { console.log('back');}}
+        onPress={() => {
+          console.log('back');
+        }}
         style={[
           globalStyles.positionAbsolute,
           globalStyles.centeredContent,
           styles.backButton,
         ]}>
-        <MaterialIcons name="arrow-back" size={30} color="black" />
+        {showBack ? (
+          <MaterialIcons name="arrow-back" size={24} color="black" />
+        ) : null}
       </TouchableOpacity>
-      <Image
-        style={[styles.logo]}
-        source={logo}
-      />
+      <Image style={[styles.logo]} source={logo} />
     </View>
   );
 }

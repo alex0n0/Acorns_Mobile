@@ -7,7 +7,10 @@ import {globalColors, globalStyles} from '../styles/GlobalStyles';
 
 const windowWidth = Dimensions.get('window').width;
 
-function BarcodeScreen() {
+function BarcodeScreen({route, navigation}) {
+  const { card } = route.params;
+  console.log(card);
+
   return (
     <SafeAreaView style={[globalStyles.flex1]}>
       <StatusBar backgroundColor="black" barStyle="light-content" />

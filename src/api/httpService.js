@@ -1,95 +1,39 @@
 import axios from 'axios';
-import {v4 as uuid} from 'uuid';
+import * as repo from './fakeRepository';
+
+export const createCategory = (name) => {
+  console.log('createCategory');
+  return new Promise((resolve, reject) => {
+    resolve(repo.createUserCategory(name));
+  });
+}
+
+export const getCategories = () => {
+  console.log('getCategories');
+  return new Promise((resolve, reject) => {
+    resolve(repo.getUserCategories());
+  });
+};
+
+export const deleteCategory = (id) => {
+  console.log('deleteCategory');
+  return new Promise((resolve, reject) => {
+    resolve(repo.deleteUserCategory(id));
+  });
+};
+
 
 export const getCards = () => {
   // return axios.get();
   console.log('getCards');
   return new Promise((resolve, reject) => {
-    resolve([
-      {
-        Id: 'a',
-        Nickname: 'Test card',
-        Points: 3,
-        CardImage: null,
-        CreatedDate: new Date(),
-      },
-      {
-        Id: 'b',
-        Nickname: 'Test card',
-        Points: 3,
-        CardImage: 'https://i.colnect.net/f/3379/433/Hoyts-Rewards-Black.jpg',
-      },
-      {
-        Id: 'c',
-        Nickname: 'Test card',
-        Points: 3,
-        CardImage: null,
-      },
-      {
-        Id: 'd',
-        Nickname: 'Test card',
-        Points: 3,
-        CardImage: 'https://i.colnect.net/f/3379/433/Hoyts-Rewards-Black.jpg',
-      },
-      {
-        Id: 'e',
-        Nickname: 'Test card',
-        Points: 3,
-        CardImage: 'https://i.colnect.net/f/3379/433/Hoyts-Rewards-Black.jpg',
-      },
-      {
-        Id: 'f',
-        Nickname: 'Test card',
-        Points: 3,
-        CardImage: 'https://i.colnect.net/f/3379/433/Hoyts-Rewards-Black.jpg',
-      },
-      {
-        Id: 'g',
-        Nickname: 'Test card',
-        Points: 3,
-        CardImage: 'https://i.colnect.net/f/3379/433/Hoyts-Rewards-Black.jpg',
-      },
-    ]);
+    resolve(repo.getUserCards());
   });
 };
 
-export const getCategories = () => {
-  console.log('getCategories');
+export const toggleFavouriteCard = (id) => {
+  console.log('toggleFavouriteCard');
   return new Promise((resolve, reject) => {
-    resolve([
-      {
-        Id: 'a',
-        Name: 'gym',
-      },
-      {
-        Id: 'b',
-        Name: 'cafe',
-        active: true
-      },
-      {
-        Id: 'c',
-        Name: 'awfe awefga weg ',
-      },
-      {
-        Id: 'd',
-        Name: 'awfe awefg awg aweg awef ',
-      },
-      {
-        Id: 'e',
-        Name: 'awfe aweg aweg waf awf ',
-      },
-      {
-        Id: 'f',
-        Name: 'awef awfe awg aweg waf w',
-      },
-      {
-        Id: 'g',
-        Name: 'asd asdga sdgadsg awf wa',
-      },
-      {
-        Id: 'h',
-        Name: 'asdf asdfaf asdf ',
-      }
-    ]);
-  });
-};
+    resolve(repo.toggleFavouriteCard(id));
+  }); 
+}

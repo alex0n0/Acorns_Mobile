@@ -20,12 +20,12 @@ const windowWidth = Dimensions.get('window').width;
 function FavouritesScreen({navigation}) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const [cards, setCards] = useState([]);
+  const [favouriteCards, setFavouriteCards] = useState([]);
 
   useEffect(() => {
     getCards()
       .then(res => {
-        setCards(res);
+        setFavouriteCards(res.filter(card => card.IsFavourite));
       })
       .catch(err => {
         // console.log(err);
@@ -34,14 +34,31 @@ function FavouritesScreen({navigation}) {
 
   useEffect(() => {
     if (isLoading) {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
+      getCards()
+        .then(res => {
+          setFavouriteCards(res.filter(card => card.IsFavourite));
+          setIsLoading(false);
+        })
+        .catch(err => {
+          // console.log(err);
+        });
     }
   }, [isLoading]);
 
   const handleReload = () => {
     setIsLoading(true);
+  };
+
+  const handleNavigateToBarcode = (card) => {
+    console.log(card);
+    navigation.navigate('FavouritesStackBarcodeTopTabs', {
+      screen: 'BarcodeTopTabsBarcodeScreen',
+      params: {
+        card: {
+          cardId: card.Id,
+        },
+      },
+    });
   };
 
   return (
@@ -52,18 +69,34 @@ function FavouritesScreen({navigation}) {
           <RefreshControl refreshing={isLoading} onRefresh={handleReload} />
         }
         contentInsetAdjustmentBehavior="automatic">
-        <Text style={[globalStyles.textCenter, globalStyles.mb50]}>
+        <Text
+          style={[
+            globalStyles.mt10,
+            globalStyles.mb10,
+            globalStyles.textCenter,
+            globalStyles.h1,
+            globalStyles.b7,
+            globalStyles.textUppercase,
+          ]}>
           Favourites
         </Text>
-        {cards.map((card, i) => (
-          <Card
-            key={card.Id}
-            card={card}
-            windowWidth={windowWidth}
-            styles={[globalStyles.mb50]}
-            onPressNavigation={() => {
-              navigation.navigate('FavouritesStackBarcodeTopTabs');
-            }}></Card>
+        {favouriteCards.map((card, i) => (
+          <View key={card.Id}>
+            <Card
+              card={card}
+              windowWidth={windowWidth}
+              handleNavigateToBarcode={handleNavigateToBarcode}></Card>
+            <View style={[globalStyles.mb50, globalStyles.pl20, globalStyles.pr20, globalStyles.flexRow]}>
+              <Text
+                style={[
+                  globalStyles.mt10,
+                  globalStyles.b7,
+                  globalStyles.textUppercase,
+                ]}>
+                {card.Company ? card.Company : card.Name}
+              </Text>
+            </View>
+          </View>
         ))}
       </ScrollView>
     </SafeAreaView>

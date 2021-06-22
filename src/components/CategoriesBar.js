@@ -50,7 +50,7 @@ function CategoriesBar({
           style={[
             globalStyles.flexRow,
             globalStyles.centeredContent,
-            globalStyles.ml5,
+            // globalStyles.ml5,
             globalStyles.mr5,
             globalStyles.pl10,
             globalStyles.pr10,

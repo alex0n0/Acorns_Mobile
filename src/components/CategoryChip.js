@@ -19,7 +19,7 @@ function CategoryChip({
         globalStyles.flexRow,
         globalStyles.centeredContent,
         globalStyles.ml5,
-        globalStyles.mr5,
+        globalStyles.mr10,
         globalStyles.pl15,
         globalStyles.pr10,
         globalStyles.pt10,

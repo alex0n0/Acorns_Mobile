@@ -1,23 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useTheme} from '@react-navigation/native';
-import {
-  StatusBar,
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  Dimensions,
-  Alert,
-} from 'react-native';
-import {
-  FAB,
-  Button,
-  BottomSheet,
-  Overlay,
-  Icon,
-  Input,
-} from 'react-native-elements';
+import {StatusBar, StyleSheet, View, Text, Alert} from 'react-native';
+import {FAB, Icon} from 'react-native-elements';
 // internal
 import CategoriesBar from '../components/CategoriesBar';
 import CardsGallery from '../components/CardsGallery';
@@ -87,12 +72,11 @@ function CardsScreen({navigation}) {
         .getCategories()
         .then(res => {
           setCategories(res.map(category => ({...category, count: 0})));
+          setIsLoading(false);
         })
         .catch(err => {
           // console.log(err);
         });
-
-      setIsLoading(false);
     }
   }, [isLoading]);
 
@@ -105,10 +89,9 @@ function CardsScreen({navigation}) {
   };
 
   const handleDeleteCategory = (categoryId, categoryName) => {
-    // console.log('handleDeleteCategory', categoryId);
     Alert.alert(
       'Delete Category',
-      'Do you want to delete ' + categoryName + '?',
+      'Do you want to delete the "' + categoryName + '" category?',
       [
         {
           text: 'Cancel',
@@ -120,11 +103,9 @@ function CardsScreen({navigation}) {
             http
               .deleteCategory(categoryId)
               .then(res => {
-                console.log('hello');
                 http
                   .getCategories()
                   .then(res => {
-                    console.log(res);
                     setCategories(
                       res.map(category => ({...category, count: 0})),
                     );
@@ -134,7 +115,7 @@ function CardsScreen({navigation}) {
                   });
               })
               .catch(err => {
-                console.log(err);
+                // console.log(err);
               });
           },
         },
@@ -147,7 +128,6 @@ function CardsScreen({navigation}) {
   };
 
   const handleAddCategory = name => {
-    console.log(name);
     http
       .createCategory(name)
       .then(res => {
@@ -173,9 +153,9 @@ function CardsScreen({navigation}) {
       });
   };
 
-  const handleToggleFavouriteCard = id => {
+  const handleToggleFavouriteCard = (id, isFavourite) => {
     http
-      .toggleFavouriteCard(id)
+      .toggleFavouriteCard(id, isFavourite)
       .then(res => {
         http
           .getCards()

@@ -1,6 +1,12 @@
 import axios from 'axios';
 import * as repo from './fakeRepository';
 
+export const getUserDetails = () => {
+  console.log('getUserDetails');
+  return new Promise((resolve, reject) => {
+    resolve(repo.getUserDetails());
+  });
+}
 export const createCategory = (name) => {
   console.log('createCategory');
   return new Promise((resolve, reject) => {
@@ -31,9 +37,9 @@ export const getCards = () => {
   });
 };
 
-export const toggleFavouriteCard = (id) => {
+export const toggleFavouriteCard = (id, isFavourite) => {
   console.log('toggleFavouriteCard');
   return new Promise((resolve, reject) => {
-    resolve(repo.toggleFavouriteCard(id));
+    resolve(repo.toggleFavouriteCard(id, isFavourite));
   }); 
 }

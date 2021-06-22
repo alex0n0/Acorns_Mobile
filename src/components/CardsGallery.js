@@ -1,29 +1,28 @@
-import React, {useState, useEffect} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useTheme} from '@react-navigation/native';
+import React from 'react';
 import {
   FlatList,
   ScrollView,
-  StatusBar,
-  StyleSheet,
   View,
   Text,
   RefreshControl,
   Dimensions,
-  TouchableHighlight,
   TouchableWithoutFeedback,
 } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {FAB, Button, BottomSheet, ListItem} from 'react-native-elements';
+import {Button, Icon} from 'react-native-elements';
 import moment from 'moment';
 // internal
 import Card from '../components/Card';
 import {globalColors, globalStyles} from '../styles/GlobalStyles';
 
-
 const windowWidth = Dimensions.get('window').width;
 
-function CardsGallery({cards, handleReload, isLoading, handleToggleFavouriteCard, handleNavigateToBarcode}) {
+function CardsGallery({
+  cards,
+  handleReload,
+  isLoading,
+  handleToggleFavouriteCard,
+  handleNavigateToBarcode,
+}) {
   return (
     <FlatList
       pagingEnabled={true}
@@ -47,16 +46,17 @@ function CardsGallery({cards, handleReload, isLoading, handleToggleFavouriteCard
             ]}>
             <TouchableWithoutFeedback
               onPress={() => {
-                handleToggleFavouriteCard(item.Id);
+                handleToggleFavouriteCard(item.Id, !item.IsFavourite);
               }}>
               <View
                 style={[globalStyles.flexRow, globalStyles.alignItemsCenter]}>
-                <MaterialIcons
+                <Icon
                   name="star"
+                  type="material"
+                  size={20}
                   color={
                     item.IsFavourite ? globalColors.primary : globalColors.muted
                   }
-                  size={20}
                 />
                 <Text
                   style={[

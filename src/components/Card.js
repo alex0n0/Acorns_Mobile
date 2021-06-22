@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {Icon} from 'react-native-elements';
 // internal
 import {globalColors, globalStyles} from '../styles/GlobalStyles';
 import defaultCard from '../assets/images/default-card.png';
@@ -63,7 +63,12 @@ function Card({card, handleNavigateToBarcode, windowWidth, styles = []}) {
             globalStyles.rounded,
             componentStyles.navigateToBarcodeButton,
           ]}>
-          <MaterialIcons name="search" size={40} color={globalColors.primaryL} />
+          <Icon
+            name="search"
+            type="material"
+            size={40}
+            color={globalColors.primaryL}
+          />
         </View>
       </TouchableOpacity>
     </View>

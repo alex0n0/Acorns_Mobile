@@ -7,13 +7,16 @@ import {
   View,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Dimensions,
   RefreshControl,
+  Alert,
 } from 'react-native';
+import {Icon} from 'react-native-elements';
 // internal
 import Card from '../components/Card';
+import * as http from '../api/httpService';
 import {globalColors, globalStyles} from '../styles/GlobalStyles';
-import {getCards} from '../api/httpService';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -23,7 +26,8 @@ function FavouritesScreen({navigation}) {
   const [favouriteCards, setFavouriteCards] = useState([]);
 
   useEffect(() => {
-    getCards()
+    http
+      .getCards()
       .then(res => {
         setFavouriteCards(res.filter(card => card.IsFavourite));
       })
@@ -34,7 +38,8 @@ function FavouritesScreen({navigation}) {
 
   useEffect(() => {
     if (isLoading) {
-      getCards()
+      http
+        .getCards()
         .then(res => {
           setFavouriteCards(res.filter(card => card.IsFavourite));
           setIsLoading(false);
@@ -49,7 +54,7 @@ function FavouritesScreen({navigation}) {
     setIsLoading(true);
   };
 
-  const handleNavigateToBarcode = (card) => {
+  const handleNavigateToBarcode = card => {
     console.log(card);
     navigation.navigate('FavouritesStackBarcodeTopTabs', {
       screen: 'BarcodeTopTabsBarcodeScreen',
@@ -61,6 +66,39 @@ function FavouritesScreen({navigation}) {
     });
   };
 
+  const handleToggleFavouriteCard = (id, name) => {
+    Alert.alert(
+      'Remove card',
+      'Do you want to remove "' + name + '" from your favourites list?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => {
+            http
+              .toggleFavouriteCard(id, false)
+              .then(res => {
+                http
+                  .getCards()
+                  .then(res => {
+                    setFavouriteCards(res.filter(card => card.IsFavourite));
+                  })
+                  .catch(err => {
+                    // console.log(err);
+                  });
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          },
+        },
+      ],
+    );
+  };
+
   return (
     <SafeAreaView style={[globalStyles.flex1]}>
       <StatusBar backgroundColor="black" barStyle="light-content" />
@@ -69,31 +107,85 @@ function FavouritesScreen({navigation}) {
           <RefreshControl refreshing={isLoading} onRefresh={handleReload} />
         }
         contentInsetAdjustmentBehavior="automatic">
-        <Text
+        <View
           style={[
-            globalStyles.mt10,
-            globalStyles.mb10,
-            globalStyles.textCenter,
-            globalStyles.h1,
-            globalStyles.b7,
-            globalStyles.textUppercase,
+            globalStyles.mt50,
+            globalStyles.mb50,
+            globalStyles.pl10,
+            globalStyles.pr10,
           ]}>
-          Favourites
-        </Text>
+          <Text
+            style={[
+              globalStyles.h1,
+              globalStyles.b7,
+              globalStyles.textUppercase,
+            ]}>
+            Favourites
+          </Text>
+          <Text style={[globalStyles.textMuted]}>
+            Easy access for your most used cards
+          </Text>
+        </View>
+
         {favouriteCards.map((card, i) => (
-          <View key={card.Id}>
+          <View key={card.Id} style={[globalStyles.mb80]}>
+            <Text
+              style={[
+                globalStyles.mb10,
+                globalStyles.textCenter,
+                globalStyles.b7,
+                globalStyles.textTitleCase,
+              ]}>
+              {card.Company ? card.Company : card.Name}
+            </Text>
             <Card
               card={card}
               windowWidth={windowWidth}
               handleNavigateToBarcode={handleNavigateToBarcode}></Card>
-            <View style={[globalStyles.mb50, globalStyles.pl20, globalStyles.pr20, globalStyles.flexRow]}>
-              <Text
-                style={[
-                  globalStyles.mt10,
-                  globalStyles.b7,
-                  globalStyles.textUppercase,
-                ]}>
-                {card.Company ? card.Company : card.Name}
+            <View
+              style={[
+                globalStyles.mt10,
+                globalStyles.pl20,
+                globalStyles.pr20,
+                globalStyles.flexRow,
+                globalStyles.justifyContentBetween,
+                globalStyles.alignItemsCenter,
+              ]}>
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  handleToggleFavouriteCard(
+                    card.Id,
+                    card.Company ? card.Company : card.Name,
+                  );
+                }}>
+                <View
+                  style={[globalStyles.flexRow, globalStyles.alignItemsCenter]}>
+                  <Icon
+                    name="star"
+                    type="material"
+                    size={20}
+                    color={globalColors.primary}
+                  />
+                  <Text
+                    style={[
+                      globalStyles.textPrimary,
+                      globalStyles.b7,
+                      globalStyles.ml5,
+                    ]}>
+                    Favourite
+                  </Text>
+                </View>
+              </TouchableWithoutFeedback>
+              <Text style={[globalStyles.alignItemsBaseline]}>
+                <Text
+                  style={[
+                    globalStyles.h2,
+                    globalStyles.b7,
+                    globalStyles.textPrimaryD,
+                  ]}>
+                  {card.Points}
+                </Text>
+                <Text style={[globalStyles.textMuted]}>{' '}Points</Text>
               </Text>
             </View>
           </View>

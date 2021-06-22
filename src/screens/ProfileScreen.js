@@ -7,34 +7,45 @@ import {
   View,
   Text,
   TouchableHighlight,
+  RefreshControl,
+  Alert,
 } from 'react-native';
 import {Button} from 'react-native-elements';
 // internal
 import Header from '../components/Header';
 import {globalColors, globalStyles} from '../styles/GlobalStyles';
-import {getCards} from '../api/httpService';
+import * as http from '../api/httpService';
+import moment from 'moment';
 
 function ProfileScreen({navigation}) {
   const [isLoading, setIsLoading] = useState(false);
 
   const [cards, setCards] = useState([]);
   const [signedIn, setSignedIn] = useState(true);
+  const [userDetails, setUserDetails] = useState();
 
   useEffect(() => {
-    // getCards()
-    //   .then(res => {
-    //     setCards(res);
-    //   })
-    //   .catch(err => {
-    //     // console.log(err);
-    //   });
+    http
+      .getUserDetails()
+      .then(res => {
+        setUserDetails(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }, []);
 
   useEffect(() => {
     if (isLoading) {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
+      http
+        .getUserDetails()
+        .then(res => {
+          setUserDetails(res);
+          setIsLoading(false);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }, [isLoading]);
 
@@ -42,13 +53,41 @@ function ProfileScreen({navigation}) {
     setIsLoading(true);
   };
 
+  const handleSignOut = () => {
+    Alert.alert('Sign out', undefined, [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Yes',
+        onPress: () => {
+          setUserDetails();
+        },
+      },
+    ]);
+  };
+  const handleSignIn = () => {
+    http
+      .getUserDetails()
+      .then(res => {
+        setUserDetails(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   return (
     <SafeAreaView style={[globalStyles.flex1]}>
       <StatusBar backgroundColor="black" barStyle="light-content" />
       <Header></Header>
-      {signedIn ? (
-        <View style={[{flex: 1}]}>
-          <View style={[globalStyles.flex11]}>
+      {userDetails ? (
+        <View style={[globalStyles.flex1]}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl refreshing={isLoading} onRefresh={handleReload} />
+            }>
             <View
               style={[
                 globalStyles.pt20,
@@ -56,12 +95,17 @@ function ProfileScreen({navigation}) {
                 globalStyles.pl10,
                 globalStyles.pr10,
               ]}>
-              <Text>John Citizen</Text>
-              <Text>john@gmail.com</Text>
-              <Text>Joined 20 Mar 2021</Text>
+              <Text style={[globalStyles.f20, globalStyles.textTitleCase]}>
+                {userDetails.FirstName + ' ' + userDetails.LastName}
+              </Text>
+              <Text style={[globalStyles.mb10]}>{userDetails.Email}</Text>
+              <Text style={[globalStyles.textMuted]}>
+                Joined on {moment(userDetails.DateJoined).format('DD MMM YYYY')}
+              </Text>
             </View>
             <View
               style={[
+                globalStyles.mb10,
                 globalStyles.pt10,
                 globalStyles.pb10,
                 globalStyles.bgWhite,
@@ -81,14 +125,13 @@ function ProfileScreen({navigation}) {
                 </View>
               </TouchableHighlight>
             </View>
-          </View>
+          </ScrollView>
           <View
             style={[
-              globalStyles.flex00,
               globalStyles.pl10,
               globalStyles.pr10,
-              globalStyles.pb10,
-              globalStyles.pt50,
+              globalStyles.pb20,
+              globalStyles.pt10,
             ]}>
             <Button
               title="SIGN OUT"
@@ -97,11 +140,16 @@ function ProfileScreen({navigation}) {
                 backgroundColor: globalColors.backgroundD,
               }}
               titleStyle={{color: globalColors.primaryL}}
+              onPress={() => handleSignOut()}
             />
           </View>
         </View>
       ) : (
-        <View style={[globalStyles.flex1, globalStyles.centeredContent]}>
+        <ScrollView
+          contentContainerStyle={[
+            globalStyles.flex11,
+            globalStyles.centeredContent,
+          ]}>
           <Text
             style={[
               globalStyles.mb10,
@@ -124,9 +172,10 @@ function ProfileScreen({navigation}) {
                 backgroundColor: globalColors.backgroundD,
               }}
               titleStyle={{color: globalColors.primaryL}}
+              onPress={() => handleSignIn()}
             />
           </View>
-        </View>
+        </ScrollView>
       )}
     </SafeAreaView>
   );

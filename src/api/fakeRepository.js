@@ -148,7 +148,6 @@ export const createUserCategory = name => {
   return true;
 };
 export const getUserCategories = () => {
-  // console.log([...userCategories]);
   return [...userCategories];
 };
 export const getUserCategory = id => {
@@ -162,9 +161,7 @@ export const updateUserCategory = ({categoryName}) => {
   });
 };
 export const deleteUserCategory = id => {
-  // console.log('deleteUserCategory', id);
   const newCategories = [...userCategories].filter(category => category.Id != id);
-  // console.log(newCategories);
   userCategories = newCategories;
   return true;
 };
@@ -178,7 +175,6 @@ export const createUserCard = name => {
   return true;
 };
 export const getUserCards = () => {
-  console.log('....');
   return [...userCards];
 };
 export const getUserCard = id => {
@@ -196,10 +192,10 @@ export const deleteUserCard = id => {
   userCards = [...userCards].filter(card => card.Id == id);
   return true;
 };
-export const toggleFavouriteCard = (cardId) => {
+export const toggleFavouriteCard = (cardId, isFavourite) => {
   [...userCards].map(card => {
     if (card.Id == cardId) {
-      card.IsFavourite = !card.IsFavourite;
+      card.IsFavourite = isFavourite;
     }
   });
   return true;
